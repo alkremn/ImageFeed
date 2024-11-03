@@ -11,11 +11,11 @@ final class ImagesListCell: UITableViewCell {
 
     static let reuseIdentifier = "ImagesListCell"
 
-    @IBOutlet var cellContainerView: UIView!
-    @IBOutlet var cellImageView: UIImageView!
+    @IBOutlet private var cellContainerView: UIView!
+    @IBOutlet private var cellImageView: UIImageView!
     @IBOutlet private var dateLabel: UILabel!
     @IBOutlet private var likeButton: UIButton!
-    @IBOutlet var gradientView: UIView!
+    @IBOutlet private var gradientView: UIView!
         
     required init?(coder: NSCoder) {
         super.init(coder: coder)

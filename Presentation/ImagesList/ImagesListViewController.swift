@@ -52,7 +52,12 @@ extension ImagesListViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: imageNames[indexPath.row]) else { return 0 }
+        let imageName = imageNames[indexPath.row]
+        guard let image = UIImage(named: imageName) else {
+            assertionFailure("Unable to create image with name \(imageName)")
+            return 0
+        }
+        
         let imageInserts = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let cellWidth = tableView.bounds.width - imageInserts.left - imageInserts.right
         let imageSizeRatio = cellWidth / image.size.width
@@ -66,7 +71,7 @@ extension ImagesListViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let image = UIImage(named: imageName),
             let likeImage = UIImage(named: isLiked ? "Active" : "No Active") else {
-            print("Unable to create image")
+            assertionFailure("Unable to create image with name \(imageName) or button image.")
             return
         }
         

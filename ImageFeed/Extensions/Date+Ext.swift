@@ -7,13 +7,14 @@
 
 import Foundation
 
-
 extension Date {
-    var stringRepresentation: String {
+    
+    private static let sharedFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .none
-        
-        return formatter.string(from: self)
-    }
+        return formatter
+    }()
+    
+    var stringRepresentation: String { Date.sharedFormatter.string(from: self) }
 }
