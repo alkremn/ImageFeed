@@ -6,30 +6,29 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6215F8E22CD5FE3A008F34EE /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6215F8E12CD5FE3A008F34EE /* Date+Ext.swift */; };
+		62AB97872CD5DA13004F5C78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62AB977E2CD5DA13004F5C78 /* Assets.xcassets */; };
+		62AB97892CD5DA13004F5C78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62AB97812CD5DA13004F5C78 /* LaunchScreen.storyboard */; };
+		62AB978A2CD5DA13004F5C78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62AB97832CD5DA13004F5C78 /* Main.storyboard */; };
+		62AB978B2CD5DA13004F5C78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AB977D2CD5DA13004F5C78 /* AppDelegate.swift */; };
+		62AB978C2CD5DA13004F5C78 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AB97842CD5DA13004F5C78 /* SceneDelegate.swift */; };
+		62AB978D2CD5DA13004F5C78 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AB97852CD5DA13004F5C78 /* ImagesListViewController.swift */; };
+		62AB97A62CD5EBD7004F5C78 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AB97A52CD5EBD7004F5C78 /* ImagesListCell.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		6215F8E12CD5FE3A008F34EE /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		62AB97652CD5D088004F5C78 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		62AB977D2CD5DA13004F5C78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		62AB977E2CD5DA13004F5C78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		62AB977F2CD5DA13004F5C78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62AB97802CD5DA13004F5C78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		62AB97822CD5DA13004F5C78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		62AB97842CD5DA13004F5C78 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		62AB97852CD5DA13004F5C78 /* ImagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListViewController.swift; sourceTree = "<group>"; };
+		62AB97A52CD5EBD7004F5C78 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		62AB97772CD5D089004F5C78 /* Exceptions for "ImageFeed" folder in "ImageFeed" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 62AB97642CD5D088004F5C78 /* ImageFeed */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		62AB97672CD5D088004F5C78 /* ImageFeed */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				62AB97772CD5D089004F5C78 /* Exceptions for "ImageFeed" folder in "ImageFeed" target */,
-			);
-			path = ImageFeed;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		62AB97622CD5D088004F5C78 /* Frameworks */ = {
@@ -42,10 +41,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6215F8E02CD5FE1C008F34EE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6215F8E12CD5FE3A008F34EE /* Date+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		62AB975C2CD5D088004F5C78 = {
 			isa = PBXGroup;
 			children = (
-				62AB97672CD5D088004F5C78 /* ImageFeed */,
+				62AB97862CD5DA13004F5C78 /* ImageFeed */,
+				62AB979E2CD5DAD5004F5C78 /* Presentation */,
 				62AB97662CD5D088004F5C78 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +64,45 @@
 				62AB97652CD5D088004F5C78 /* ImageFeed.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		62AB97862CD5DA13004F5C78 /* ImageFeed */ = {
+			isa = PBXGroup;
+			children = (
+				6215F8E02CD5FE1C008F34EE /* Extensions */,
+				62AB977D2CD5DA13004F5C78 /* AppDelegate.swift */,
+				62AB97842CD5DA13004F5C78 /* SceneDelegate.swift */,
+				62AB978E2CD5DA17004F5C78 /* Resources */,
+			);
+			path = ImageFeed;
+			sourceTree = "<group>";
+		};
+		62AB978E2CD5DA17004F5C78 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				62AB977E2CD5DA13004F5C78 /* Assets.xcassets */,
+				62AB97812CD5DA13004F5C78 /* LaunchScreen.storyboard */,
+				62AB977F2CD5DA13004F5C78 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		62AB979E2CD5DAD5004F5C78 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				62AB97A72CD5EBF0004F5C78 /* ImagesList */,
+				62AB97832CD5DA13004F5C78 /* Main.storyboard */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		62AB97A72CD5EBF0004F5C78 /* ImagesList */ = {
+			isa = PBXGroup;
+			children = (
+				62AB97A52CD5EBD7004F5C78 /* ImagesListCell.swift */,
+				62AB97852CD5DA13004F5C78 /* ImagesListViewController.swift */,
+			);
+			path = ImagesList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -72,9 +119,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				62AB97672CD5D088004F5C78 /* ImageFeed */,
 			);
 			name = ImageFeed;
 			packageProductDependencies = (
@@ -122,6 +166,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62AB97872CD5DA13004F5C78 /* Assets.xcassets in Resources */,
+				62AB97892CD5DA13004F5C78 /* LaunchScreen.storyboard in Resources */,
+				62AB978A2CD5DA13004F5C78 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,10 +179,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62AB978B2CD5DA13004F5C78 /* AppDelegate.swift in Sources */,
+				62AB97A62CD5EBD7004F5C78 /* ImagesListCell.swift in Sources */,
+				62AB978C2CD5DA13004F5C78 /* SceneDelegate.swift in Sources */,
+				62AB978D2CD5DA13004F5C78 /* ImagesListViewController.swift in Sources */,
+				6215F8E22CD5FE3A008F34EE /* Date+Ext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		62AB97812CD5DA13004F5C78 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				62AB97802CD5DA13004F5C78 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		62AB97832CD5DA13004F5C78 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				62AB97822CD5DA13004F5C78 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		62AB97792CD5D089004F5C78 /* Debug */ = {
@@ -147,7 +218,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FQ92952J93;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = ImageFeed/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -180,7 +251,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FQ92952J93;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = ImageFeed/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
