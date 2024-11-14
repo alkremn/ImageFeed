@@ -13,11 +13,14 @@ final class ProfileViewController: UIViewController {
     private let usernameText = "@ekaterina_nov"
     private let descriptionText = "Hello, world!"
     
-    private var favoriteImageNames: [String] = []
+    private var favoriteImageNames: [String] = [] {
+        didSet {
+            favoritesCountLabel.text = "\(favoriteImageNames.count)"
+        }
+    }
     
     private lazy var profileImageView: UIImageView = {
-        guard let image = UIImage(named: "Avatar") else { return UIImageView() }
-        let imageView = UIImageView(image: image)
+        let imageView = UIImageView(image: UIImage(named: "Avatar"))
         imageView.layer.cornerRadius = 35
         imageView.layer.masksToBounds = true
         return imageView
@@ -33,55 +36,43 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
-    private lazy var nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = self.nameText
-        label.font = .systemFont(ofSize: 23, weight: .bold)
-        return label
-    }()
+    private lazy var nameLabel: UILabel = UILabel(
+        text: self.nameText,
+        font: .systemFont(ofSize: 23, weight: .bold),
+        textColor: .ypWhite)
     
-    private lazy var usernameLabel: UILabel = {
-        let label = UILabel()
-        label.text = self.usernameText
-        label.font = .systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .ypGray
-        return label
-    }()
+    private lazy var usernameLabel: UILabel = UILabel(
+        text: self.usernameText,
+        font: .systemFont(ofSize: 13, weight: .regular),
+        textColor: .ypGray)
     
     private lazy var descriptionLabel: UILabel = {
-        let textView = UILabel()
-        textView.text = descriptionText
+        let textView = UILabel(
+            text: descriptionText,
+            font: .systemFont(ofSize: 13, weight: .regular),
+            textColor: .ypWhite)
+    
         textView.numberOfLines = 2
-        textView.font = .systemFont(ofSize: 13, weight: .regular)
-        textView.textColor = .white
         return textView
     }()
     
+    private lazy var favoritesLabel: UILabel = UILabel(
+        text: "Избранное",
+        font: .systemFont(ofSize: 23, weight: .bold),
+        textColor: .ypWhite)
+  
+    
     private lazy var favoritesCountLabel: UILabel = {
-        let label = UILabel()
-        label.text = "\(favoriteImageNames.count)"
-        label.font = .systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .ypWhite
+        let label = UILabel(
+            text: "\(favoriteImageNames.count)",
+            font: .systemFont(ofSize: 13, weight: .regular),
+            textColor: .ypWhite)
+        
         label.textAlignment = .center
         label.backgroundColor = .ypBlue
-        label.layer.cornerRadius = 12
+        label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
         return label
-    }()
-    
-    private lazy var favoritesHStack: UIStackView = {
-        let favoritesLabel = UILabel()
-        favoritesLabel.text = "Избранное"
-        favoritesLabel.font = .systemFont(ofSize: 23, weight: .bold)
-        favoritesLabel.textColor = .ypWhite
-        
-        let stackView = UIStackView(arrangedSubviews: [
-            favoritesLabel,
-            favoritesCountLabel
-        ])
-        stackView.alignment = .center
-        stackView.spacing = 8
-        return stackView
     }()
     
     private lazy var emptyImageView: UIImageView = {
@@ -96,15 +87,14 @@ final class ProfileViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .ypBlack
-        emptyImageView.isHidden = !favoriteImageNames.isEmpty
-        favoritesCountLabel.isHidden = favoriteImageNames.isEmpty
+    
+        view.addSubViews(profileImageView, nameLabel, logoutButton, usernameLabel, descriptionLabel, favoritesLabel,
+            favoritesCountLabel, emptyImageView)
         
-        [profileImageView, nameLabel, logoutButton, usernameLabel,
-         descriptionLabel, favoritesHStack, emptyImageView].forEach({
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        })
-        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             profileImageView.widthAnchor.constraint(equalToConstant: 70),
             profileImageView.heightAnchor.constraint(equalToConstant: 70),
@@ -129,17 +119,20 @@ final class ProfileViewController: UIViewController {
             favoritesCountLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 40),
             favoritesCountLabel.heightAnchor.constraint(equalToConstant: 22),
             
-            favoritesHStack.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
-            favoritesHStack.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor),
+            favoritesLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
+            favoritesLabel.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor),
+            
+            favoritesCountLabel.centerYAnchor.constraint(equalTo: favoritesLabel.centerYAnchor),
+            favoritesCountLabel.leadingAnchor.constraint(equalTo: favoritesLabel.trailingAnchor, constant: 8),
             
             emptyImageView.widthAnchor.constraint(equalToConstant: 115),
             emptyImageView.heightAnchor.constraint(equalTo: emptyImageView.widthAnchor),
             emptyImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyImageView.topAnchor.constraint(equalTo: favoritesHStack.bottomAnchor, constant: 110),
+            emptyImageView.topAnchor.constraint(equalTo: favoritesLabel.bottomAnchor, constant: 110),
         ])
     }
     
-    @objc func logoutButtonDidTap(_ sender: Any) {
+    @objc private func logoutButtonDidTap(_ sender: Any) {
         print("logging out")
     }
 }

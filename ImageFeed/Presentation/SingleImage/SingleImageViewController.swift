@@ -9,8 +9,8 @@ import UIKit
 
 final class SingleImageViewController: UIViewController {
 
-    @IBOutlet var scrollView: UIScrollView!
-    @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var imageView: UIImageView!
     
     var image: UIImage? {
         didSet {
@@ -28,44 +28,48 @@ final class SingleImageViewController: UIViewController {
         configureUI()
     }
     
-    @IBAction func didTapbackButton(_ sender: Any) {
+    @IBAction private func didTapbackButton(_ sender: Any) {
         dismiss(animated: true)
     }
     
-    @IBAction func didTapShareButton(_ sender: Any) {
+    @IBAction private func didTapShareButton(_ sender: Any) {
         guard let image = image else { return }
-        
+
         let activityVC = UIActivityViewController(
             activityItems: [image],
-            applicationActivities: nil)
+            applicationActivities: nil
+        )
+        
+        if #available(iOS 13.0, *) {
+                activityVC.excludedActivityTypes = [.addToReadingList, .openInIBooks, .markupAsPDF]
+        }
+        
         present(activityVC, animated: true, completion: nil)
     }
     
     private func configureUI() {
         scrollView.delegate = self
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
-        
-        guard let image = image else { return }
-        
-        imageView.image = image
-        imageView.frame.size = image.size
-        setImageInitialScale(image: image)
+    
+        if let image = image {
+            imageView.image = image
+            imageView.frame.size = image.size
+            setImageInitialScale(image: image)
+        }
     }
     
     private func setImageInitialScale(image: UIImage) {
         view.layoutIfNeeded()
         
         let visibleRectSize = scrollView.bounds.size
-        
         let hScale = visibleRectSize.width / image.size.width
         let vScale = visibleRectSize.height / image.size.height
-        
         let theoreticalScale = min(hScale, vScale)
         let scale = min(scrollView.maximumZoomScale, max(scrollView.minimumZoomScale, theoreticalScale))
         
         scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
+        
+        recenterImageInScrollView(image: image)
     }
     
     private func recenterImageInScrollView(image: UIImage) {

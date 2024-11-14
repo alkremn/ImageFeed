@@ -137,6 +137,14 @@
                                 </subviews>
                                 <viewLayoutGuide key="contentLayoutGuide" id="f0w-XU-lZK"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="JdO-FE-c79"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="minimumZoomScale">
+                                        <real key="value" value="0.10000000000000001"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="maximumZoomScale">
+                                        <real key="value" value="1.25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yev-Ne-uFz" userLabel="Share">
                                 <rect key="frame" x="182" y="829" width="50" height="50"/>
