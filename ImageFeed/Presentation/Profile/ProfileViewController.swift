@@ -13,12 +13,6 @@ final class ProfileViewController: UIViewController {
     private let usernameText = "@ekaterina_nov"
     private let descriptionText = "Hello, world!"
     
-    private var favoriteImageNames: [String] = [] {
-        didSet {
-            favoritesCountLabel.text = "\(favoriteImageNames.count)"
-        }
-    }
-    
     private lazy var profileImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "Avatar"))
         imageView.layer.cornerRadius = 35
@@ -56,29 +50,6 @@ final class ProfileViewController: UIViewController {
         return textView
     }()
     
-    private lazy var favoritesLabel: UILabel = UILabel(
-        text: "Избранное",
-        font: .systemFont(ofSize: 23, weight: .bold),
-        textColor: .ypWhite)
-  
-    
-    private lazy var favoritesCountLabel: UILabel = {
-        let label = UILabel(
-            text: "\(favoriteImageNames.count)",
-            font: .systemFont(ofSize: 13, weight: .regular),
-            textColor: .ypWhite)
-        
-        label.textAlignment = .center
-        label.backgroundColor = .ypBlue
-        label.layer.cornerRadius = 10
-        label.layer.masksToBounds = true
-        return label
-    }()
-    
-    private lazy var emptyImageView: UIImageView = {
-        UIImageView(image: UIImage(named: "No Photo") ?? UIImage())
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -88,8 +59,7 @@ final class ProfileViewController: UIViewController {
     private func configureUI() {
         view.backgroundColor = .ypBlack
     
-        view.addSubViews(profileImageView, nameLabel, logoutButton, usernameLabel, descriptionLabel, favoritesLabel,
-            favoritesCountLabel, emptyImageView)
+        view.addSubViews(profileImageView, nameLabel, logoutButton, usernameLabel, descriptionLabel)
         
         setupConstraints()
     }
@@ -115,20 +85,6 @@ final class ProfileViewController: UIViewController {
             descriptionLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor),
-            
-            favoritesCountLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 40),
-            favoritesCountLabel.heightAnchor.constraint(equalToConstant: 22),
-            
-            favoritesLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
-            favoritesLabel.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor),
-            
-            favoritesCountLabel.centerYAnchor.constraint(equalTo: favoritesLabel.centerYAnchor),
-            favoritesCountLabel.leadingAnchor.constraint(equalTo: favoritesLabel.trailingAnchor, constant: 8),
-            
-            emptyImageView.widthAnchor.constraint(equalToConstant: 115),
-            emptyImageView.heightAnchor.constraint(equalTo: emptyImageView.widthAnchor),
-            emptyImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyImageView.topAnchor.constraint(equalTo: favoritesLabel.bottomAnchor, constant: 110),
         ])
     }
     

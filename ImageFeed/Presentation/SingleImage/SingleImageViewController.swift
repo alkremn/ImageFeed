@@ -28,7 +28,7 @@ final class SingleImageViewController: UIViewController {
         configureUI()
     }
     
-    @IBAction private func didTapbackButton(_ sender: Any) {
+    @IBAction private func didTapBackButton(_ sender: Any) {
         dismiss(animated: true)
     }
     

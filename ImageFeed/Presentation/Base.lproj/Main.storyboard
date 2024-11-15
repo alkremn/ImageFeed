@@ -174,7 +174,7 @@
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="Backward"/>
                                 <connections>
-                                    <action selector="didTapbackButton:" destination="gST-Nc-h1Q" eventType="touchUpInside" id="FfU-JZ-gpb"/>
+                                    <action selector="didTapBackButton:" destination="gST-Nc-h1Q" eventType="touchUpInside" id="wo9-Ks-l1A"/>
                                 </connections>
                             </button>
                         </subviews>
