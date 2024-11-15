@@ -11,15 +11,14 @@ final class ImagesListCell: UITableViewCell {
 
     static let reuseIdentifier = "ImagesListCell"
 
-    @IBOutlet private var cellContainerView: UIView!
-    @IBOutlet private var cellImageView: UIImageView!
-    @IBOutlet private var dateLabel: UILabel!
-    @IBOutlet private var likeButton: UIButton!
-    @IBOutlet private var gradientView: UIView!
+    @IBOutlet private weak var cellContainerView: UIView!
+    @IBOutlet private weak var cellImageView: UIImageView!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var likeButton: UIButton!
+    @IBOutlet private weak var gradientView: UIView!
         
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        
     }
     
     override func awakeFromNib() {
