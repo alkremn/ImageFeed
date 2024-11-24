@@ -7,16 +7,15 @@
 
 import UIKit
 
-protocol AuthViewControllerDelegate {
+protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
 
 final class AuthViewController: UIViewController {
     
-    var delegate: AuthViewControllerDelegate?
+    weak var delegate: AuthViewControllerDelegate?
 
     private let showWebViewIdentifier = "ShowWebView"
-    private let oAuth2Service = OAuth2Service()
     
     private lazy var logoImageView: UIImageView = {
         UIImageView(image: UIImage(named: "auth_screen_logo"))
@@ -81,18 +80,20 @@ final class AuthViewController: UIViewController {
     }
 }
 
+//MARK: - WebViewViewControllerDelegate
+
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
         
-        oAuth2Service.fetchOAuthToken(code: code) { [weak self] result in
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             guard let self else { return }
             
             switch result {
             case.success(_):
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                assertionFailure("Unable to get token with error: \(error)")
+                print("Unable to get token with error: \(error)")
             }
         }
     }

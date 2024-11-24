@@ -9,6 +9,10 @@ import Foundation
 
 final class OAuth2Service {
     
+    static let shared = OAuth2Service()
+
+    private init() {}
+    
     private let baseOAuth2Url = "https://unsplash.com"
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
@@ -26,17 +30,17 @@ final class OAuth2Service {
                     OAuth2TokenStorage.shared.token = authResponse.accessToken
                     completion(.success(authResponse.accessToken))
                 } catch {
-                    assertionFailure("Unable to decode data with error: \(error)")
+                    print("Unable to decode data with error: \(error)")
                 }
             case .failure(let error):
-                assertionFailure("failed to get data with error: \(error)")
+                print("failed to get data with error: \(error)")
             }
         }.resume()
     }
     
     private func createOAuthToken(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: baseOAuth2Url + "/oauth/token") else {
-            assertionFailure("Unable to create url components")
+            print("Unable to create url components")
             return nil
         }
         
@@ -49,7 +53,7 @@ final class OAuth2Service {
         ]
         
         guard let url = urlComponents.url else {
-            assertionFailure("Unable to retrieve url from url components")
+            print("Unable to retrieve url from url components")
             return nil
         }
         

@@ -8,14 +8,14 @@
 import UIKit
 import WebKit
 
-protocol WebViewViewControllerDelegate {
+protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
 final class WebViewViewController: UIViewController {
     
-    var delegate: WebViewViewControllerDelegate?
+    weak var delegate: WebViewViewControllerDelegate?
     
     enum WebViewConstants {
         static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
@@ -71,7 +71,7 @@ final class WebViewViewController: UIViewController {
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            assertionFailure("Unable to create url components")
+            print("Unable to create url components")
             return }
         
         urlComponents.queryItems = [
@@ -82,7 +82,7 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else {
-            assertionFailure("Unable to get url from urlComponents")
+            print("Unable to get url from urlComponents")
             return
         }
     
@@ -128,10 +128,14 @@ final class WebViewViewController: UIViewController {
     }
 }
 
+//MARK: - WKNavigationDelegate
+
 extension WebViewViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView,
-                 decidePolicyFor navigationAction: WKNavigationAction,
-                 decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void) {
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void)
+    {
         if let code = code(from: navigationAction) {
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             delegate?.webViewViewControllerDidCancel(self)

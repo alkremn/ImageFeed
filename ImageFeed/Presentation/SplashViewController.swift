@@ -10,6 +10,8 @@ import UIKit
 final class SplashViewController: UIViewController {
 
     private let showAuthenticationScreenSegueIdentifier = "showAuthenticationScreenSegue"
+    private let mainStoryboardName = "Main"
+    private let tabBarControllerIdentifier = "TabBarViewController"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,12 +51,14 @@ final class SplashViewController: UIViewController {
             return
         }
         
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = UIStoryboard(name: mainStoryboardName, bundle: .main)
+            .instantiateViewController(withIdentifier: tabBarControllerIdentifier)
         
         window.rootViewController = tabBarController
     }
 }
+
+//MARK: - AuthViewControllerDelegate
 
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
