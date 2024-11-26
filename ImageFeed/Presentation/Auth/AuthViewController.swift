@@ -86,9 +86,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
         
-        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self else { return }
-            
+        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
             switch result {
             case.success(_):
                 self.delegate?.didAuthenticate(self)
