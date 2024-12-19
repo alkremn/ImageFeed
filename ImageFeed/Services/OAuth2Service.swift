@@ -7,38 +7,52 @@
 
 import Foundation
 
+enum AuthServiceError: Error {
+    case invalidRequest
+}
+
 final class OAuth2Service {
     
     static let shared = OAuth2Service()
-
+    
     private init() {}
     
     private let baseOAuth2Url = "https://unsplash.com"
     
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
+    
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let request = createOAuthToken(code: code)
-        guard let request else { return }
+        assert(Thread.isMainThread)
         
-        URLSession.shared.data(for: request) { result in
+        guard lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
+        task?.cancel()
+        lastCode = code
+        
+        guard let request = createOAuthTokenRequest(code: code) else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
+        task = URLSession.shared.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    
-                    let authResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    OAuth2TokenStorage.shared.token = authResponse.accessToken
-                    completion(.success(authResponse.accessToken))
-                } catch {
-                    print("Unable to decode data with error: \(error)")
-                }
+            case .success(let authResponse):
+                OAuth2TokenStorage.shared.token = authResponse.accessToken
+                completion(.success(authResponse.accessToken))
             case .failure(let error):
                 print("failed to get data with error: \(error)")
             }
-        }.resume()
+        }
+        
+        task?.resume()
     }
     
-    private func createOAuthToken(code: String) -> URLRequest? {
+    private func createOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: baseOAuth2Url + "/oauth/token") else {
             print("Unable to create url components")
             return nil
@@ -59,7 +73,7 @@ final class OAuth2Service {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-
+        
         return request
     }
 }
