@@ -8,9 +8,31 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
-
-    @IBOutlet private weak var scrollView: UIScrollView!
-    @IBOutlet private weak var imageView: UIImageView!
+    
+    private lazy var imageView: UIImageView = { UIImageView() }()
+    
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.delegate = self
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+        scrollView.addSubViews(imageView)
+        return scrollView
+    }()
+    
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "nav_back"), for: .normal)
+        button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var shareButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "share"), for: .normal)
+        button.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
+        return button
+    }()
     
     var image: UIImage? {
         didSet {
@@ -24,37 +46,26 @@ final class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
     }
     
-    @IBAction private func didTapBackButton(_ sender: Any) {
+    @objc private func didTapBackButton(_ sender: Any) {
         dismiss(animated: true)
     }
     
-    @IBAction private func didTapShareButton(_ sender: Any) {
+    @objc private func didTapShareButton(_ sender: Any) {
         guard let image = image else { return }
-
+        
         let activityVC = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil
         )
         
         if #available(iOS 13.0, *) {
-                activityVC.excludedActivityTypes = [.addToReadingList, .openInIBooks, .markupAsPDF]
+            activityVC.excludedActivityTypes = [.addToReadingList, .openInIBooks, .markupAsPDF]
         }
         
         present(activityVC, animated: true, completion: nil)
-    }
-    
-    private func configureUI() {
-        scrollView.delegate = self
-    
-        if let image = image {
-            imageView.image = image
-            imageView.frame.size = image.size
-            setImageInitialScale(image: image)
-        }
     }
     
     private func setImageInitialScale(image: UIImage) {
@@ -75,8 +86,41 @@ final class SingleImageViewController: UIViewController {
     private func recenterImageInScrollView(image: UIImage) {
         let offsetX = max((scrollView.bounds.width - scrollView.contentSize.width) * 0.5, 0)
         let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) * 0.5, 0)
-    
+        
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
+    }
+    
+    //MARK: - Configure Layout
+    
+    private func configureUI() {
+        view.backgroundColor = .ypBlack
+        view.addSubViews(scrollView, backButton, shareButton)
+        addConstraints()
+        
+        if let image = image {
+            imageView.image = image
+            imageView.frame.size = image.size
+            setImageInitialScale(image: image)
+        }
+    }
+    
+    private func addConstraints() {
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            backButton.widthAnchor.constraint(equalToConstant: 48),
+            backButton.heightAnchor.constraint(equalToConstant: 48),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
+            
+            shareButton.widthAnchor.constraint(equalToConstant: 50),
+            shareButton.heightAnchor.constraint(equalToConstant: 50),
+            shareButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            shareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 17)
+        ])
     }
 }
 
