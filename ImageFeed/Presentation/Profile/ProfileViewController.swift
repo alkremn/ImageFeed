@@ -6,15 +6,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
-
-    private let nameText = "Екатерина Новикова"
-    private let usernameText = "@ekaterina_nov"
-    private let descriptionText = "Hello, world!"
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     private lazy var profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "Avatar"))
+        let imageView = UIImageView()
         imageView.layer.cornerRadius = 35
         imageView.layer.masksToBounds = true
         return imageView
@@ -22,7 +21,7 @@ final class ProfileViewController: UIViewController {
     
     private lazy var logoutButton: UIButton = {
         let button = UIButton.systemButton(
-            with: UIImage(named: "Exit") ?? UIImage(),
+            with: UIImage(named: "exit") ?? UIImage(),
             target: self,
             action: #selector(logoutButtonDidTap)
         )
@@ -31,18 +30,15 @@ final class ProfileViewController: UIViewController {
     }()
     
     private lazy var nameLabel: UILabel = UILabel(
-        text: self.nameText,
         font: .systemFont(ofSize: 23, weight: .bold),
         textColor: .ypWhite)
     
-    private lazy var usernameLabel: UILabel = UILabel(
-        text: self.usernameText,
+    private lazy var loginNameLabel: UILabel = UILabel(
         font: .systemFont(ofSize: 13, weight: .regular),
         textColor: .ypGray)
     
     private lazy var descriptionLabel: UILabel = {
         let textView = UILabel(
-            text: descriptionText,
             font: .systemFont(ofSize: 13, weight: .regular),
             textColor: .ypWhite)
     
@@ -54,13 +50,42 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            }
+        
+        updateAvatar()
+        
+        if let profile = ProfileService.shared.profile {
+            updateProfileDetails(with: profile)
+        }
+    }
+    
+    private func updateProfileDetails(with profile: Profile) {
+        nameLabel.text = profile.name
+        loginNameLabel.text = "@\(profile.loginName)"
+        descriptionLabel.text = profile.bio
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURLString = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURLString)
+        else { return }
+        
+        profileImageView.kf.setImage(with: url)
     }
     
     private func configureUI() {
         view.backgroundColor = .ypBlack
-    
-        view.addSubViews(profileImageView, nameLabel, logoutButton, usernameLabel, descriptionLabel)
-        
+        view.addSubViews(profileImageView, nameLabel, logoutButton, loginNameLabel, descriptionLabel)
         setupConstraints()
     }
     
@@ -79,17 +104,18 @@ final class ProfileViewController: UIViewController {
             nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 8),
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor),
             
-            usernameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            usernameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            loginNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            loginNameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             
-            descriptionLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: loginNameLabel.bottomAnchor, constant: 8),
+            descriptionLabel.leadingAnchor.constraint(equalTo: loginNameLabel.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor),
         ])
     }
     
     @objc private func logoutButtonDidTap(_ sender: Any) {
-        print("logging out")
+        OAuth2TokenStorage.shared.removeToken()
+        navigationController?.popToRootViewController(animated: true)
     }
 }
 
