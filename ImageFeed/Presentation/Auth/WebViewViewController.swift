@@ -32,7 +32,7 @@ final class WebViewViewController: UIViewController {
     private lazy var progressView: UIProgressView = {
         let progressView = UIProgressView()
         progressView.tintColor = .ypBlack
-        progressView.setProgress(1, animated: true)
+        progressView.setProgress(0, animated: true)
         return progressView
     }()
     

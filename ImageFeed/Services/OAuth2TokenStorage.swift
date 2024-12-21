@@ -24,7 +24,7 @@ final class OAuth2TokenStorage {
             keychain.string(forKey: Keys.bearerToken.rawValue)
         }
         set {
-            guard let newValue else { return}
+            guard let newValue else { return }
             keychain.set(newValue, forKey: Keys.bearerToken.rawValue)
         }
     }

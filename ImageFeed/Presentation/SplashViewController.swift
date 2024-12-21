@@ -47,7 +47,6 @@ final class SplashViewController: UIViewController {
                 self.switchToTabBarController()
             case .failure(let error):
                 print("Failed to get profile with error \(error)")
-                OAuth2TokenStorage.shared.removeToken()
                 self.presentAuthController()
             }
         }
