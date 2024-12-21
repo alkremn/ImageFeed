@@ -17,6 +17,8 @@ final class WebViewViewController: UIViewController {
     
     weak var delegate: WebViewViewControllerDelegate?
     
+    private var keyValueObservation: NSKeyValueObservation?
+    
     enum WebViewConstants {
         static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     }
@@ -30,7 +32,7 @@ final class WebViewViewController: UIViewController {
     private lazy var progressView: UIProgressView = {
         let progressView = UIProgressView()
         progressView.tintColor = .ypBlack
-        progressView.setProgress(1, animated: true)
+        progressView.setProgress(0, animated: true)
         return progressView
     }()
     
@@ -44,34 +46,16 @@ final class WebViewViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        webView.addObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            options: .new,
-            context: nil)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
-    }
-    
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
-        context: UnsafeMutableRawPointer?
-    ){
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
+        keyValueObservation = webView.observe(
+            \.estimatedProgress,
+             options: [.new]) { _, change in
+                 self.updateProgress()
+             }
     }
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            print("Unable to create url components")
+            print("[loadAuthView]: URLError - Unable to create url components")
             return }
         
         urlComponents.queryItems = [
@@ -82,7 +66,7 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else {
-            print("Unable to get url from urlComponents")
+            print("[loadAuthView]: URLError - Unable to get url from urlComponents")
             return
         }
     
@@ -91,6 +75,7 @@ final class WebViewViewController: UIViewController {
     }
     
     private func configureUI() {
+        view.backgroundColor = .ypWhite
         view.addSubViews(webView, progressView)
         setupConstraints()
     }
