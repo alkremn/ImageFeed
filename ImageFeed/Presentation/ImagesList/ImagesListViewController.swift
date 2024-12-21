@@ -71,7 +71,7 @@ extension ImagesListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let imageName = imageNames[indexPath.row]
         guard let image = UIImage(named: imageName) else {
-            assertionFailure("Unable to create image with name \(imageName)")
+            assertionFailure("[tableView]: InitializationError Unable to create image with name \(imageName)")
             return 0
         }
         
@@ -88,7 +88,7 @@ extension ImagesListViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let image = UIImage(named: imageName),
             let likeImage = UIImage(named: isLiked ? "active" : "not_active") else {
-            assertionFailure("Unable to create image with name \(imageName) or button image.")
+            assertionFailure("[configureCell]: InitializationError - Unable to create image with name \(imageName) or button image.")
             return
         }
         

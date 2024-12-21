@@ -30,9 +30,11 @@ extension URLSession {
                     let decodedData = try decoder.decode(T.self, from: data)
                     completion(.success(decodedData))
                 } catch {
+                    print("[objectTask]: JSON Decoder Error - \(error.localizedDescription)")
                     completion(.failure(error))
                 }
             case .failure(let error):
+                print("[objectTask]: NetworkError - \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -57,14 +59,14 @@ extension URLSession {
                 if 200..<300 ~= statusCode {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
-                    print("Unsuccessful response code")
+                    print("[dataTask]: NetworkError - Error code \(statusCode)")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
-                print("Url request error: \(error.localizedDescription)")
+                print("[dataTask]: NetworkError - Error \(error.localizedDescription)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
             } else {
-                print("Url session error: \(error.debugDescription)")
+                print("[dataTask]: UrlSessionError")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         }

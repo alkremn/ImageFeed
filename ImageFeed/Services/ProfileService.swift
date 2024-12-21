@@ -39,7 +39,7 @@ final class ProfileService {
                 self.profile = profile
                 completion(.success(profile))
             case .failure(let error):
-                print("failed to get data with error: \(error)")
+                print("[fetchProfile]: NetworkError - \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -49,7 +49,7 @@ final class ProfileService {
     
     private func createProfileURLRequest(with token: String) -> URLRequest? {
         guard var url = Constants.defaultBaseURL else {
-            print("Base url does not exist")
+            print("[createProfileURLRequest]: URLError - Base url does not exist")
             return nil
         }
         

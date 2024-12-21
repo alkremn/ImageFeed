@@ -46,7 +46,7 @@ final class ProfileImageService {
                         userInfo: ["URL": profileImageUrl]
                     )
             case .failure(let error):
-                print("Unable to get data with error: \(error)")
+                print("[fetchProfileImageURL]: NetworkError - \(error.localizedDescription)")
             }
         })
         
@@ -55,7 +55,7 @@ final class ProfileImageService {
     
     private func createProfileImageRequest(with token: String, username: String) -> URLRequest? {
         guard var url = Constants.defaultBaseURL else {
-            print("Base url does not exist")
+            print("[createProfileImageRequest]: URLError - Base url does not exist")
             return nil
         }
         

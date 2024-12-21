@@ -94,7 +94,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case.success(_):
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print("Unable to get token with error: \(error)")
+                print("[webViewViewController]: NetworkError - Unable to get token with error: \(error)")
                 self.presentAlertController()
                 
             }

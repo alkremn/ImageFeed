@@ -55,7 +55,7 @@ final class WebViewViewController: UIViewController {
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            print("Unable to create url components")
+            print("[loadAuthView]: URLError - Unable to create url components")
             return }
         
         urlComponents.queryItems = [
@@ -66,7 +66,7 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else {
-            print("Unable to get url from urlComponents")
+            print("[loadAuthView]: URLError - Unable to get url from urlComponents")
             return
         }
     

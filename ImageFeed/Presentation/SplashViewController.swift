@@ -28,7 +28,7 @@ final class SplashViewController: UIViewController {
     
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid window configuration")
+            assertionFailure("[switchToTabBarController]: ConfigurationError - Invalid window configuration")
             return
         }
         
@@ -46,7 +46,7 @@ final class SplashViewController: UIViewController {
                 self.fetchProfileImage(token: token, username: profile.username)
                 self.switchToTabBarController()
             case .failure(let error):
-                print("Failed to get profile with error \(error)")
+                print("[fetchProfile]: NetworkError - Failed to get profile with error \(error)")
                 self.presentAuthController()
             }
         }
@@ -68,7 +68,7 @@ final class SplashViewController: UIViewController {
                 case .success(_):
                     break
                 case .failure(let error):
-                    print("Failed to get profile image url with error \(error)")
+                    print("[fetchProfileImage]: NetworkError - Failed to get profile image url with error \(error)")
                 }
             }
     }

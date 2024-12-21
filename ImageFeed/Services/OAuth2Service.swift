@@ -22,7 +22,6 @@ final class OAuth2Service {
     private var task: URLSessionTask?
     private var lastCode: String?
     
-    
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
@@ -45,7 +44,7 @@ final class OAuth2Service {
                 OAuth2TokenStorage.shared.token = authResponse.accessToken
                 completion(.success(authResponse.accessToken))
             case .failure(let error):
-                print("failed to get data with error: \(error)")
+                print("[OAuth2Service]: NetworkError - \(error.localizedDescription)")
             }
         }
         
@@ -54,7 +53,7 @@ final class OAuth2Service {
     
     private func createOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: baseOAuth2Url + "/oauth/token") else {
-            print("Unable to create url components")
+            print("[createOAuthTokenRequest]: URLError - Unable to create url components")
             return nil
         }
         
@@ -67,7 +66,7 @@ final class OAuth2Service {
         ]
         
         guard let url = urlComponents.url else {
-            print("Unable to retrieve url from url components")
+            print("[createOAuthTokenRequest]: URLError - Unable to retrieve url from url components")
             return nil
         }
         
