@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -14,12 +15,8 @@ protocol AuthViewControllerDelegate: AnyObject {
 final class AuthViewController: UIViewController {
     
     weak var delegate: AuthViewControllerDelegate?
-
-    private let showWebViewIdentifier = "ShowWebView"
     
-    private lazy var logoImageView: UIImageView = {
-        UIImageView(image: UIImage(named: "auth_screen_logo"))
-    }()
+    private lazy var logoImageView: UIImageView = { UIImageView(image: UIImage(named: "auth_screen_logo"))}()
     
     private lazy var loginButton: UIButton = {
         let button = UIButton()
@@ -35,8 +32,25 @@ final class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configureUI()
+    }
+    
+    private func presentAlertController() {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(title: "Ok", style: .default)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @objc private func didTapLoginButton() {
+        let vc = WebViewViewController()
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func configureUI() {
@@ -53,7 +67,6 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = .ypBlack
     }
     
-    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             logoImageView.widthAnchor.constraint(equalToConstant: 60),
@@ -67,17 +80,6 @@ final class AuthViewController: UIViewController {
             loginButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
     }
-    
-    @objc private func didTapLoginButton() {
-        performSegue(withIdentifier: showWebViewIdentifier, sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewIdentifier,
-           let webViewController = segue.destination as? WebViewViewController {
-            webViewController.delegate = self
-        }
-    }
 }
 
 //MARK: - WebViewViewControllerDelegate
@@ -85,13 +87,16 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
-        
+        UIBlockingProgressHUD.show()
         OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+            UIBlockingProgressHUD.dismiss()
             switch result {
             case.success(_):
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print("Unable to get token with error: \(error)")
+                print("[webViewViewController]: NetworkError - Unable to get token with error: \(error)")
+                self.presentAlertController()
+                
             }
         }
     }
