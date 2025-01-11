@@ -10,6 +10,7 @@ import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    private lazy var alertPresenter = AlertPresenter(viewController: self)
     private var profileImageServiceObserver: NSObjectProtocol?
     
     private lazy var profileImageView: UIImageView = {
@@ -113,9 +114,27 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    private func logout() {
+        ProfileLogoutService.shared.logout()
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("[logoutButtonDidTap]: ConfigurationError - Invalid window configuration")
+            return
+        }
+        window.rootViewController = SplashViewController()
+    }
+    
     @objc private func logoutButtonDidTap(_ sender: Any) {
-        OAuth2TokenStorage.shared.removeToken()
-        navigationController?.popToRootViewController(animated: true)
+        alertPresenter.show(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            actions: [
+                UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+                    self?.logout()
+                },
+                UIAlertAction(title: "Нет", style: .cancel) { [weak self] _ in
+                    self?.dismiss(animated: true)
+                }
+        ])
     }
 }
 

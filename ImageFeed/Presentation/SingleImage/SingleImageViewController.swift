@@ -9,6 +9,7 @@ import UIKit
 
 final class SingleImageViewController: UIViewController {
     
+    private lazy var alertPresenter: AlertPresenter = AlertPresenter(viewController: self)
     private lazy var imageView: UIImageView = { UIImageView() }()
     
     private lazy var scrollView: UIScrollView = {
@@ -34,19 +35,39 @@ final class SingleImageViewController: UIViewController {
         return button
     }()
     
-    var image: UIImage? {
-        didSet {
-            guard isViewLoaded, let image = image else { return }
-            
-            imageView.image = image
-            imageView.frame.size = image.size
-            setImageInitialScale(image: image)
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+    }
+    
+    func configure(imageUrl: URL) {
+        UIBlockingProgressHUD.show()
+        setImage(with: imageUrl)
+    }
+    
+    private func setImage(with imageUrl: URL) {
+        imageView.kf.setImage(with: imageUrl) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self else { return }
+            
+            switch result {
+            case .success(let imageResult):
+                self.setImageInitialScale(image: imageResult.image)
+            case .failure(let error):
+                print("SingleImageViewController.configure - ImageLoadError: Unable to download image with error \(error)")
+                alertPresenter.show(
+                    title: "Что-то пошло не так. Попробовать ещё раз?",
+                    message: nil,
+                    actions: [
+                        UIAlertAction(title: "Не надо", style: .default, handler: { [weak self] _ in
+                            self?.dismiss(animated: true)
+                        }),
+                        UIAlertAction(title: "Повторить", style: .default, handler: { [weak self] _ in
+                            self?.setImage(with: imageUrl)
+                        })
+                    ])
+            }
+        }
     }
     
     @objc private func didTapBackButton(_ sender: Any) {
@@ -54,7 +75,7 @@ final class SingleImageViewController: UIViewController {
     }
     
     @objc private func didTapShareButton(_ sender: Any) {
-        guard let image = image else { return }
+        guard let image = imageView.image else { return }
         
         let activityVC = UIActivityViewController(
             activityItems: [image],
@@ -96,12 +117,6 @@ final class SingleImageViewController: UIViewController {
         view.backgroundColor = .ypBlack
         view.addSubViews(scrollView, backButton, shareButton)
         addConstraints()
-        
-        if let image = image {
-            imageView.image = image
-            imageView.frame.size = image.size
-            setImageInitialScale(image: image)
-        }
     }
     
     private func addConstraints() {
@@ -132,7 +147,7 @@ extension SingleImageViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        guard let image = image else { return }
+        guard let image = imageView.image else { return }
         recenterImageInScrollView(image: image)
     }
 }

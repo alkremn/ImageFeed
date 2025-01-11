@@ -1,4 +1,4 @@
-//
+// v   
 //  SplashViewController.swift
 //  ImageFeed
 //
@@ -21,9 +21,11 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        OAuth2TokenStorage.shared.token != nil
-        ? fetchProfile(OAuth2TokenStorage.shared.token!)
-        : presentAuthController()
+        guard let token = OAuth2TokenStorage.shared.token else {
+            presentAuthController()
+            return
+        }
+        fetchProfile(token)
     }
     
     private func switchToTabBarController() {
