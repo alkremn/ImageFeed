@@ -9,21 +9,16 @@ import UIKit
 
 
 final class AlertPresenter {
-    
-    private weak var viewController: UIViewController?
-    
-    init(viewController: UIViewController?) {
-        self.viewController = viewController
-    }
-    
-    func show(title: String?, message: String?, actions: [UIAlertAction]) {
+        
+    static func show(title: String?, message: String?, actions: [UIAlertAction], viewController: UIViewController?) {
         let alert = UIAlertController(
             title: title,
             message: message,
             preferredStyle: .alert
         )
-        
+
         actions.forEach({alert.addAction($0)})
+        alert.preferredAction = actions.last
         viewController?.present(alert, animated: true)
     }
 }

@@ -9,8 +9,6 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
     
-    private lazy var alertPresenter: AlertPresenter = AlertPresenter(viewController: self)
-    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = self
@@ -144,15 +142,16 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
                 
             case .failure:
-                alertPresenter.show(
+                AlertPresenter.show(
                     title: "Что-то пошло не так(",
                     message: "Запрос не удался",
                     actions: [
                         UIAlertAction(title: "OK", style: .default) { [weak self] _ in
                             self?.dismiss(animated: true)
                         }
-                ])
-                break
+                    ],
+                    viewController: self
+                )
             }
             
             UIBlockingProgressHUD.dismiss()

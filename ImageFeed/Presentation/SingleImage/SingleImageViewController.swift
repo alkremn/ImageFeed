@@ -9,7 +9,6 @@ import UIKit
 
 final class SingleImageViewController: UIViewController {
     
-    private lazy var alertPresenter: AlertPresenter = AlertPresenter(viewController: self)
     private lazy var imageView: UIImageView = { UIImageView() }()
     
     private lazy var scrollView: UIScrollView = {
@@ -55,7 +54,7 @@ final class SingleImageViewController: UIViewController {
                 self.setImageInitialScale(image: imageResult.image)
             case .failure(let error):
                 print("SingleImageViewController.configure - ImageLoadError: Unable to download image with error \(error)")
-                alertPresenter.show(
+                AlertPresenter.show(
                     title: "Что-то пошло не так. Попробовать ещё раз?",
                     message: nil,
                     actions: [
@@ -65,7 +64,9 @@ final class SingleImageViewController: UIViewController {
                         UIAlertAction(title: "Повторить", style: .default, handler: { [weak self] _ in
                             self?.setImage(with: imageUrl)
                         })
-                    ])
+                    ],
+                    viewController: self
+                )
             }
         }
     }

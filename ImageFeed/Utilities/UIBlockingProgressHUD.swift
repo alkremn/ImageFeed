@@ -10,6 +10,12 @@ import ProgressHUD
 
 final class UIBlockingProgressHUD {
     
+    static func setup() {
+        ProgressHUD.animationType = .activityIndicator
+        ProgressHUD.colorHUD = .ypBlack
+        ProgressHUD.colorAnimation = .lightGray
+    }
+    
     private static var window: UIWindow? {
         UIApplication.shared.windows.first
     }

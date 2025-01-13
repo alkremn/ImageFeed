@@ -10,7 +10,6 @@ import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
-    private lazy var alertPresenter = AlertPresenter(viewController: self)
     private var profileImageServiceObserver: NSObjectProtocol?
     
     private lazy var profileImageView: UIImageView = {
@@ -124,17 +123,19 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func logoutButtonDidTap(_ sender: Any) {
-        alertPresenter.show(
+        AlertPresenter.show(
             title: "Пока, пока!",
             message: "Уверены что хотите выйти?",
             actions: [
                 UIAlertAction(title: "Да", style: .default) { [weak self] _ in
                     self?.logout()
                 },
-                UIAlertAction(title: "Нет", style: .cancel) { [weak self] _ in
+                UIAlertAction(title: "Нет", style: .default) { [weak self] _ in
                     self?.dismiss(animated: true)
                 }
-        ])
+            ],
+            viewController: self
+        )
     }
 }
 
