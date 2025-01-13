@@ -53,6 +53,11 @@ final class ProfileImageService {
         task?.resume()
     }
     
+    func clear() {
+        task?.cancel()
+        avatarURL = nil
+    }
+    
     private func createProfileImageRequest(with token: String, username: String) -> URLRequest? {
         guard var url = Constants.defaultBaseURL else {
             print("[createProfileImageRequest]: URLError - Base url does not exist")

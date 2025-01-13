@@ -47,6 +47,11 @@ final class ProfileService {
         task?.resume()
     }
     
+    func clear() {
+        task?.cancel()
+        profile = nil
+    }
+    
     private func createProfileURLRequest(with token: String) -> URLRequest? {
         guard var url = Constants.defaultBaseURL else {
             print("[createProfileURLRequest]: URLError - Base url does not exist")
