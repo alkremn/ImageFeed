@@ -7,18 +7,28 @@
 
 import UIKit
 
-
 final class AlertPresenter {
-        
-    static func show(title: String?, message: String?, actions: [UIAlertAction], viewController: UIViewController?) {
+    
+    static weak var viewController: UIViewController?
+    
+    static func show(_ viewController: UIViewController, alertModal: AlertModel) {
         let alert = UIAlertController(
-            title: title,
-            message: message,
+            title: alertModal.title,
+            message: alertModal.message,
             preferredStyle: .alert
         )
-
-        actions.forEach({alert.addAction($0)})
-        alert.preferredAction = actions.last
-        viewController?.present(alert, animated: true)
+        
+        alertModal.actions.forEach { action in
+            let alertAction = UIAlertAction(title: action.buttonText, style: .default) { _ in
+                action.completion()
+            }
+            alert.addAction(alertAction)
+            if action.isPreferred {
+                alert.preferredAction = alertAction
+            }
+        }
+        
+        alert.view.accessibilityIdentifier = "Alert"
+        viewController.present(alert, animated: true, completion: nil)
     }
 }

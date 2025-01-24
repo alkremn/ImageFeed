@@ -77,7 +77,22 @@ final class SplashViewController: UIViewController {
     
     private func createTabBarController() -> UITabBarController {
         let imagesListVC = ImagesListViewController()
+        let imagesListPresenter = ImagesListPresenter(
+            imagesListService: ImagesListService.shared,
+            oAuth2TokenStorage: OAuth2TokenStorage.shared)
+        
+        imagesListVC.presenter = imagesListPresenter
+        imagesListPresenter.view = imagesListVC
+        
+        
         let profileVC = ProfileViewController()
+        let profilePresenter = ProfilePresenter(
+            profileService: ProfileService.shared,
+            profileImageService: ProfileImageService.shared,
+            profileLogoutService: ProfileLogoutService.shared
+        )
+        profileVC.presenter = profilePresenter
+        profilePresenter.view = profileVC
         
         imagesListVC.tabBarItem = UITabBarItem(
             title: "",

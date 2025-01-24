@@ -8,9 +8,18 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func setProfileImage(with url: URL)
+    func updateProfileDetails(with profile: Profile)
+    func show(alert: AlertModel)
+    func didAlertDismiss()
+    func didRedirect(to controller: UIViewController)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfilePresenterProtocol?
     
     private lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -26,6 +35,7 @@ final class ProfileViewController: UIViewController {
             action: #selector(logoutButtonDidTap)
         )
         button.tintColor = .ypRed
+        button.accessibilityIdentifier = "logout_button"
         return button
     }()
     
@@ -41,7 +51,7 @@ final class ProfileViewController: UIViewController {
         let textView = UILabel(
             font: .systemFont(ofSize: 13, weight: .regular),
             textColor: .ypWhite)
-    
+        
         textView.numberOfLines = 2
         return textView
     }()
@@ -50,36 +60,16 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self else { return }
-                self.updateAvatar()
-            }
-        
-        updateAvatar()
-        
-        if let profile = ProfileService.shared.profile {
-            updateProfileDetails(with: profile)
-        }
+        presenter?.viewDidLoad()
     }
     
-    private func updateProfileDetails(with profile: Profile) {
+    func updateProfileDetails(with profile: Profile) {
         nameLabel.text = profile.name
         loginNameLabel.text = "@\(profile.loginName)"
         descriptionLabel.text = profile.bio
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURLString = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURLString)
-        else { return }
-        
+    func setProfileImage(with url: URL) {
         profileImageView.kf.setImage(with: url)
     }
     
@@ -113,29 +103,24 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    private func logout() {
-        ProfileLogoutService.shared.logout()
+    
+    func didRedirect(to controller: UIViewController) {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("[logoutButtonDidTap]: ConfigurationError - Invalid window configuration")
             return
         }
-        window.rootViewController = SplashViewController()
+        window.rootViewController = controller
+    }
+    
+    func show(alert: AlertModel) {
+        AlertPresenter.show(self, alertModal: alert)
+    }
+    
+    func didAlertDismiss() {
+        dismiss(animated: true)
     }
     
     @objc private func logoutButtonDidTap(_ sender: Any) {
-        AlertPresenter.show(
-            title: "Пока, пока!",
-            message: "Уверены что хотите выйти?",
-            actions: [
-                UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-                    self?.logout()
-                },
-                UIAlertAction(title: "Нет", style: .default) { [weak self] _ in
-                    self?.dismiss(animated: true)
-                }
-            ],
-            viewController: self
-        )
+        presenter?.didLogoutRequest()
     }
 }
-

@@ -24,6 +24,7 @@ final class SingleImageViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "nav_back"), for: .normal)
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        button.accessibilityIdentifier = "nav_back_button_white"
         return button
     }()
     
@@ -54,19 +55,7 @@ final class SingleImageViewController: UIViewController {
                 self.setImageInitialScale(image: imageResult.image)
             case .failure(let error):
                 print("SingleImageViewController.configure - ImageLoadError: Unable to download image with error \(error)")
-                AlertPresenter.show(
-                    title: "Что-то пошло не так. Попробовать ещё раз?",
-                    message: nil,
-                    actions: [
-                        UIAlertAction(title: "Не надо", style: .default, handler: { [weak self] _ in
-                            self?.dismiss(animated: true)
-                        }),
-                        UIAlertAction(title: "Повторить", style: .default, handler: { [weak self] _ in
-                            self?.setImage(with: imageUrl)
-                        })
-                    ],
-                    viewController: self
-                )
+                showFailureAlert(imageUrl)
             }
         }
     }
@@ -110,6 +99,24 @@ final class SingleImageViewController: UIViewController {
         let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) * 0.5, 0)
         
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
+    }
+
+    private func showFailureAlert(_ imageUrl: URL) {
+        let alertModel = AlertModel(
+            title: "Что-то пошло не так. Попробовать ещё раз?",
+            message: nil,
+            actions: [
+                AlertAction(buttonText: "Не надо") { [weak self] in
+                        self?.dismiss(animated: true)
+                },
+                AlertAction(
+                    buttonText: "Повторить",
+                    isPreferred: true) { [weak self] in
+                    self?.setImage(with: imageUrl)
+                }
+            ])
+        
+        AlertPresenter.show(self, alertModal: alertModel)
     }
     
     //MARK: - Configure Layout
