@@ -76,7 +76,7 @@ final class ProfileService: ProfileServiceProtocol {
     private func convert(from result: ProfileResult) -> Profile {
         return .init(
             username: result.username,
-            name: "\(result.firstName) \(result.lastName)",
+            name: "\(result.firstName) \(result.lastName ?? "")",
             loginName: result.username,
             bio: result.bio
         )

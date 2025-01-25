@@ -10,7 +10,7 @@ import UIKit
 protocol ProfilePresenterProtocol: AnyObject {
     var view: ProfileViewControllerProtocol? { get set }
     func viewDidLoad()
-    func didLogoutRequest()
+    func didTapLogoutButton()
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
@@ -61,13 +61,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
     }
     
-    func didLogoutRequest() {
+    func didTapLogoutButton() {
         let yesAction = AlertAction(buttonText: "Да", isPreferred: true) { [weak self] in
-            self?.didLogout()
+            self?.didConfirmLogout()
         }
         
         let noAction = AlertAction(buttonText: "Нет") { [weak self] in
-            self?.view?.didAlertDismiss()
+            self?.view?.dismissAlert()
         }
         
         let alertModel = AlertModel(
@@ -81,8 +81,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         view?.show(alert: alertModel)
     }
     
-    func didLogout() {
+    func didConfirmLogout() {
         profileLogoutService.logout()
-        view?.didRedirect(to: SplashViewController())
+        view?.redirect(to: SplashViewController())
     }
 }

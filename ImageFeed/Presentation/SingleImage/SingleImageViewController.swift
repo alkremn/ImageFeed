@@ -100,20 +100,20 @@ final class SingleImageViewController: UIViewController {
         
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
     }
-
+    
     private func showFailureAlert(_ imageUrl: URL) {
         let alertModel = AlertModel(
             title: "Что-то пошло не так. Попробовать ещё раз?",
             message: nil,
             actions: [
                 AlertAction(buttonText: "Не надо") { [weak self] in
-                        self?.dismiss(animated: true)
+                    self?.dismiss(animated: true)
                 },
                 AlertAction(
                     buttonText: "Повторить",
                     isPreferred: true) { [weak self] in
-                    self?.setImage(with: imageUrl)
-                }
+                        self?.setImage(with: imageUrl)
+                    }
             ])
         
         AlertPresenter.show(self, alertModal: alertModel)

@@ -13,8 +13,8 @@ protocol ProfileViewControllerProtocol: AnyObject {
     func setProfileImage(with url: URL)
     func updateProfileDetails(with profile: Profile)
     func show(alert: AlertModel)
-    func didAlertDismiss()
-    func didRedirect(to controller: UIViewController)
+    func dismissAlert()
+    func redirect(to controller: UIViewController)
 }
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
@@ -104,7 +104,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     }
     
     
-    func didRedirect(to controller: UIViewController) {
+    func redirect(to controller: UIViewController) {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("[logoutButtonDidTap]: ConfigurationError - Invalid window configuration")
             return
@@ -116,11 +116,11 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         AlertPresenter.show(self, alertModal: alert)
     }
     
-    func didAlertDismiss() {
+    func dismissAlert() {
         dismiss(animated: true)
     }
     
     @objc private func logoutButtonDidTap(_ sender: Any) {
-        presenter?.didLogoutRequest()
+        presenter?.didTapLogoutButton()
     }
 }

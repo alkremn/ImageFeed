@@ -9,15 +9,6 @@
 import XCTest
 
 final class WebViewTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testViewControllerCallsViewDidLoad() {
         let viewController = WebViewViewController()
         let presenter = WebViewPresenterSpy()
@@ -72,7 +63,7 @@ final class WebViewTests: XCTestCase {
         // when
         let url = authHelper.getAuthURL()!
         let urlString = url.absoluteString
-
+        
         // then
         XCTAssertTrue(urlString.contains(configuration.authURLString))
         XCTAssertTrue(urlString.contains(configuration.accessKey))
@@ -94,36 +85,5 @@ final class WebViewTests: XCTestCase {
         
         // then
         XCTAssertEqual(code, expectedCode)
-    }
-}
-
-final class WebViewViewControllerSpy: WebViewViewControllerProtocol {
-    var isLoadRequestCalled = false
-    var presenter: (any Image_Feed.WebViewPresenterProtocol)?
-    
-    func load(request: URLRequest) {
-        isLoadRequestCalled = true
-    }
-    
-    func setProgressValue(_ newValue: Float) {
-    }
-    
-    func setProgressHidden(_ isHidden: Bool) {
-    }
-}
-
-final class WebViewPresenterSpy: WebViewPresenterProtocol {
-    var viewDodLoadCalled: Bool = false
-    var view: WebViewViewControllerProtocol?
-    
-    func viewDidLoad() {
-        viewDodLoadCalled = true
-    }
-    
-    func didUpdateProgressValue(_ newValue: Double) {
-    }
-    
-    func code(from url: URL) -> String? {
-        return nil
     }
 }

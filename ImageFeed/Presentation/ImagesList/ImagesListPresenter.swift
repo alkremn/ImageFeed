@@ -13,7 +13,7 @@ protocol ImagesListPresenterProtocol: AnyObject {
     var imagesCount: Int { get }
     func viewDidLoad()
     func didSelectRow(at index: Int)
-    func didImageLike(at index: Int)
+    func didTapImageLikeButton(at index: Int)
     func willDisplayImage(at index: Int)
 }
 
@@ -61,7 +61,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         view?.present(singleImageVC)
     }
     
-    func didImageLike(at index: Int) {
+    func didTapImageLikeButton(at index: Int) {
         view?.showProgress()
         let photo = photos[index]
         imagesListService.changeLike(photoId: photo.id, isLiked: !photo.isLiked) { [weak self] result in
