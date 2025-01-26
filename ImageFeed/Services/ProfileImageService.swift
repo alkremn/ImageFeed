@@ -7,14 +7,23 @@
 
 import Foundation
 
+protocol ProfileImageServiceProtocol {
+    static var didChangeNotification: Notification.Name { get }
+    var avatarURL: String? { get }
+    
+    func fetchProfileImageURL(token: String, username: String, _ completion: @escaping (Result<String, Error>) -> Void)
+    func clear()
+}
+
 enum ProfileImageServiceError: Error {
     case decodeFailure
     case fetchDataFailure
 }
 
-final class ProfileImageService {
-    
+final class ProfileImageService: ProfileImageServiceProtocol {
+
     static let shared = ProfileImageService()
+    
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     private(set) var avatarURL: String?
     
@@ -59,10 +68,7 @@ final class ProfileImageService {
     }
     
     private func createProfileImageRequest(with token: String, username: String) -> URLRequest? {
-        guard var url = Constants.defaultBaseURL else {
-            print("[createProfileImageRequest]: URLError - Base url does not exist")
-            return nil
-        }
+        var url = Constants.defaultBaseURL
         
         if #available(iOS 16, *) {
             url = url.appending(path: "/users/\(username)")

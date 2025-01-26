@@ -27,6 +27,7 @@ final class AuthViewController: UIViewController {
         button.backgroundColor = .ypWhite
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
+        button.accessibilityIdentifier = "Authenticate"
         return button
     }()
     
@@ -48,9 +49,13 @@ final class AuthViewController: UIViewController {
     }
     
     @objc private func didTapLoginButton() {
-        let vc = WebViewViewController()
-        vc.delegate = self
-        navigationController?.pushViewController(vc, animated: true)
+        let webViewVC = WebViewViewController()
+        let authHelper = AuthHelper(configuration: AuthConfiguration.standard)
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+        webViewVC.presenter = webViewPresenter
+        webViewPresenter.view = webViewVC
+        webViewVC.delegate = self
+        navigationController?.pushViewController(webViewVC, animated: true)
     }
     
     private func configureUI() {
@@ -96,7 +101,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .failure(let error):
                 print("[webViewViewController]: NetworkError - Unable to get token with error: \(error)")
                 self.presentAlertController()
-                
             }
         }
     }

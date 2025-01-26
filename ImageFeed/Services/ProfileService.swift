@@ -7,11 +7,17 @@
 
 import Foundation
 
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+    func fetchProfile(token: String, completion: @escaping (Result<Profile, Error>) -> Void)
+    func clear()
+}
+
 enum ProfileServiceError: Error {
     case invalidRequest
 }
 
-final class ProfileService {
+final class ProfileService: ProfileServiceProtocol {
     
     static let shared = ProfileService()
     
@@ -53,10 +59,7 @@ final class ProfileService {
     }
     
     private func createProfileURLRequest(with token: String) -> URLRequest? {
-        guard var url = Constants.defaultBaseURL else {
-            print("[createProfileURLRequest]: URLError - Base url does not exist")
-            return nil
-        }
+        var url = Constants.defaultBaseURL
         
         if #available(iOS 16, *) {
             url = url.appending(path: "/me")
@@ -73,7 +76,7 @@ final class ProfileService {
     private func convert(from result: ProfileResult) -> Profile {
         return .init(
             username: result.username,
-            name: "\(result.firstName) \(result.lastName)",
+            name: "\(result.firstName) \(result.lastName ?? "")",
             loginName: result.username,
             bio: result.bio
         )

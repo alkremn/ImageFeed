@@ -7,7 +7,16 @@
 
 import Foundation
 
-final class ImagesListService {
+protocol ImagesListServiceProtocol: AnyObject {
+    static var didChangeNotification: Notification.Name { get }
+    var photos: [Photo] { get }
+    
+    func fetchPhotosNextPage(token: String)
+    func changeLike(photoId: String, isLiked: Bool, completion: @escaping (Result<Void, Error>) -> Void)
+    func clear()
+}
+
+final class ImagesListService: ImagesListServiceProtocol {
     
     static let shared = ImagesListService()
     
@@ -55,8 +64,8 @@ final class ImagesListService {
     func changeLike(photoId: String, isLiked: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let token = OAuth2TokenStorage.shared.token,
               var request = createChangeLikeRequest(with: token, photoId: photoId) else {
-                return
-            }
+            return
+        }
         
         request.httpMethod = isLiked ? "POST" : "DELETE"
         
@@ -88,8 +97,7 @@ final class ImagesListService {
     }
     
     private func createImageListRequest(with token: String, pageNumber: Int) -> URLRequest? {
-        guard let baseUrl = Constants.defaultBaseURL,
-              var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: true)
+        guard var urlComponents = URLComponents(url: Constants.defaultBaseURL, resolvingAgainstBaseURL: true)
         else {
             print("[createImageListRequest]: URLError - Base url does not exist")
             return nil
@@ -117,10 +125,7 @@ final class ImagesListService {
     }
     
     private func createChangeLikeRequest(with token: String, photoId: String) -> URLRequest? {
-        guard var url = Constants.defaultBaseURL else {
-            print("[createChangeLikeRequest]: URLError - Base url does not exist")
-            return nil
-        }
+        var url = Constants.defaultBaseURL
         
         if #available(iOS 16, *) {
             url = url.appending(path: "/photos/\(photoId)/like")

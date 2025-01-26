@@ -8,8 +8,11 @@
 import Foundation
 import WebKit
 
+protocol ProfileLogoutServiceProtocol {
+    func logout()
+}
 
-final class ProfileLogoutService {
+final class ProfileLogoutService: ProfileLogoutServiceProtocol {
     static let shared = ProfileLogoutService()
     
     private init() {}

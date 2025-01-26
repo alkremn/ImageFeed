@@ -80,6 +80,7 @@ final class ImagesListCell: UITableViewCell {
                 break
             }
         }
+        likeButton.accessibilityIdentifier = isLiked ? "like_button_on" : "like_button_off"
     }
     
     func setIsLiked(isLiked: Bool) {
@@ -88,6 +89,7 @@ final class ImagesListCell: UITableViewCell {
             return
         }
         likeButton.setImage(likedImage, for: .normal)
+        likeButton.accessibilityIdentifier = isLiked ? "like_button_on" : "like_button_off"
     }
     
     private func configureUI() {
